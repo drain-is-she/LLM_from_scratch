@@ -78,8 +78,8 @@ Install a PyTorch build appropriate for your hardware, then install the remainin
 requirements in a virtual environment:
 
 ```bash
-git clone https://github.com/Vansh-A1/LLM_FROM_SCRATCH.git
-cd LLM_FROM_SCRATCH
+git clone https://github.com/drain-is-she/LLM_from_scratch.git
+cd LLM_from_scratch
 python -m venv .venv
 source .venv/bin/activate
 python -m pip install -r requirements.txt
@@ -131,4 +131,4 @@ a regex tokenizer, GPT-2 encoding, input/target windows, token embeddings, and
 single-head attention. Historical drafts are labeled separately and are not
 imported by the active trainer.
 
-Built and maintained by [Vansh Joshi](https://github.com/Vansh-A1).
+A collaborative project by [Priyanshi Goyal](https://github.com/drain-is-she) and [Vansh Joshi](https://github.com/Vansh-A1).
