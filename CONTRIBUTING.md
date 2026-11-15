@@ -28,3 +28,21 @@ python -m compileall -q llm training learning
 Run a training check only with your own local corpus and a separate output folder.
 Do not present an early training-loss value as a model-quality benchmark. When
 reporting an evaluation, identify the dataset, metric, run settings, and limits.
+
+## CPU attention regression checks
+
+With PyTorch installed, run from the repository root:
+
+```bash
+python -m unittest discover -s tests -v
+```
+
+The four attention tests use tiny CPU tensors (8 input features, 12 output
+features, three heads, and at most six tokens). They check finite outputs at
+supported sequence lengths, batch independence, unchanged prefix outputs when
+future tokens change, and zero gradients from a prefix-only loss to future
+inputs. No corpus, tokenizer download, checkpoint, GPU, or training run is needed.
+
+Validated with Python 3.13 and PyTorch 2.12.1+cu130 using CPU tensors only. These
+checks verify the attention component's causal behavior with dropout disabled;
+they do not measure language-model quality or validate the full training pipeline.

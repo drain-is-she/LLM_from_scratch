@@ -132,3 +132,11 @@ single-head attention. Historical drafts are labeled separately and are not
 imported by the active trainer.
 
 A collaborative project by [Priyanshi Goyal](https://github.com/drain-is-she) and [Vansh Joshi](https://github.com/Vansh-A1).
+
+## CPU regression tests
+
+Run `python -m unittest discover -s tests -v` with PyTorch installed to check
+attention shapes, finite outputs and gradients, batch independence, and causal
+masking. Tests use tiny CPU tensors and do not load a corpus or train the model.
+See [Contributing](CONTRIBUTING.md#cpu-attention-regression-checks) for the tested
+environment and scope.
