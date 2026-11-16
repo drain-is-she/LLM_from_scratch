@@ -135,8 +135,9 @@ A collaborative project by [Priyanshi Goyal](https://github.com/drain-is-she) an
 
 ## CPU regression tests
 
-Run `python -m unittest discover -s tests -v` with PyTorch installed to check
-attention shapes, finite outputs and gradients, batch independence, and causal
-masking. Tests use tiny CPU tensors and do not load a corpus or train the model.
+Run `python -m unittest discover -s tests -v` with PyTorch and tiktoken installed to check
+attention shapes, finite outputs and gradients, batch independence, causal
+masking, and streaming dataset behavior. Tests use tiny CPU tensors and temporary
+synthetic documents; they do not load a real corpus or train the model.
 See [Contributing](CONTRIBUTING.md#cpu-attention-regression-checks) for the tested
 environment and scope.

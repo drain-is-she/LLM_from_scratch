@@ -31,7 +31,7 @@ reporting an evaluation, identify the dataset, metric, run settings, and limits.
 
 ## CPU attention regression checks
 
-With PyTorch installed, run from the repository root:
+With PyTorch and tiktoken installed, run from the repository root:
 
 ```bash
 python -m unittest discover -s tests -v
@@ -46,3 +46,14 @@ inputs. No corpus, tokenizer download, checkpoint, GPU, or training run is neede
 Validated with Python 3.13 and PyTorch 2.12.1+cu130 using CPU tensors only. These
 checks verify the attention component's causal behavior with dropout disabled;
 they do not measure language-model quality or validate the full training pipeline.
+
+## Streaming dataset regression checks
+
+The same discovery command also runs five streaming tests using temporary UTF-8
+text and JSONL indexes. They verify byte offsets, shifted targets across document
+boundaries, dropped short remainders, the pre-shuffle token cap, repeatable epochs,
+real PyTorch DataLoader batching, invalid ranges, and the single-worker guard.
+
+`tiktoken` must be importable, but its encoding lookup is replaced by a local
+character tokenizer in these tests. No vocabulary or corpus is downloaded. These
+checks validate loader mechanics, not GPT-2 tokenization or training quality.
