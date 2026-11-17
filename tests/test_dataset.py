@@ -95,6 +95,24 @@ class StreamingDatasetTests(unittest.TestCase):
             with self.subTest(entries=entries), self.assertRaisesRegex(ValueError, "Invalid document offsets"):
                 list(GPTDataset(self.text, context_length=2))
 
+    def test_malformed_index_records_report_line_number(self):
+        self.write_documents(["abcdef"])
+        invalid = ["{", "[]", "null", "{}",
+                   '{"byte_start": false, "byte_end": 6}',
+                   '{"byte_start": 0.0, "byte_end": 6}',
+                   '{"byte_start": 0, "byte_end": "6"}',
+                   '{"byte_start": 0, "byte_end": null}']
+        for record in invalid:
+            self.index.write_text(record + "\n")
+            with self.subTest(record=record), self.assertRaisesRegex(ValueError, "index line 1"):
+                list(GPTDataset(self.text, context_length=2))
+
+    def test_later_malformed_record_reports_its_actual_line(self):
+        self.write_documents(["abcdef"])
+        self.index.write_text('{"byte_start": 0, "byte_end": 3}\n{}\n')
+        with self.assertRaisesRegex(ValueError, "index line 2"):
+            list(GPTDataset(self.text, context_length=2))
+
     def test_worker_guard(self):
         self.write_documents(["abcdef"])
         with patch("training.dataset.get_worker_info", return_value=object()):

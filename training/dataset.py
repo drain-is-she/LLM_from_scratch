@@ -72,9 +72,29 @@ class GPTDataset(IterableDataset):
 
                 for line_number, line in enumerate(index_file, start=1):
 
-                    document = json.loads(line)
+                    try:
+                        document = json.loads(line)
+                    except json.JSONDecodeError as exc:
+                        raise ValueError(
+                            f"Invalid JSON at index line {line_number}"
+                        ) from exc
+
+                    if not isinstance(document, dict) or not {
+                        "byte_start", "byte_end"
+                    }.issubset(document):
+                        raise ValueError(
+                            f"Expected an object with byte_start and byte_end "
+                            f"at index line {line_number}"
+                        )
+
                     start = document["byte_start"]
                     end = document["byte_end"]
+
+                    # bool is an int subclass, but is not a byte offset.
+                    if type(start) is not int or type(end) is not int:
+                        raise ValueError(
+                            f"Expected integer document offsets at index line {line_number}"
+                        )
 
                     if start < previous_end or end <= start or end > file_size:
                         raise ValueError(

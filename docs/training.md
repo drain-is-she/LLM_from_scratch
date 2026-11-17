@@ -23,7 +23,10 @@ Each JSONL index has one object per document. The loader uses these two fields:
 ```
 
 Those numbers are an example of the schema, not a bundled document. Offsets refer
-to bytes in the corresponding TXT file, and `byte_end` is exclusive. Documents
+to bytes in the corresponding TXT file, and `byte_end` is exclusive. Both fields
+must be JSON integers; booleans, strings, and fractional numbers are rejected.
+Malformed records and invalid offsets raise `ValueError` with the index line number
+when the loader reaches that record. Documents
 must be nonempty, ordered, nonoverlapping, within the file, and valid UTF-8. Extra
 provenance fields may remain in the index. Keep whole documents in separate
 training and validation splits.

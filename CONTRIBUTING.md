@@ -49,10 +49,11 @@ they do not measure language-model quality or validate the full training pipelin
 
 ## Streaming dataset regression checks
 
-The same discovery command also runs five streaming tests using temporary UTF-8
+The same discovery command also runs seven streaming tests using temporary UTF-8
 text and JSONL indexes. They verify byte offsets, shifted targets across document
 boundaries, dropped short remainders, the pre-shuffle token cap, repeatable epochs,
-real PyTorch DataLoader batching, invalid ranges, and the single-worker guard.
+real PyTorch DataLoader batching, invalid ranges, malformed index records with
+line-number errors, and the single-worker guard.
 
 `tiktoken` must be importable, but its encoding lookup is replaced by a local
 character tokenizer in these tests. No vocabulary or corpus is downloaded. These
