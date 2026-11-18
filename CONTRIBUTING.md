@@ -58,3 +58,18 @@ line-number errors, and the single-worker guard.
 `tiktoken` must be importable, but its encoding lookup is replaced by a local
 character tokenizer in these tests. No vocabulary or corpus is downloaded. These
 checks validate loader mechanics, not GPT-2 tokenization or training quality.
+
+## Model integration regression checks
+
+Discovery also runs three tests through the full 12-block `Model`, using eight
+features, two attention heads, a vocabulary of 17, and at most six positions.
+They check causal prefix logits, finite cross-entropy gradients reaching every
+parameter, one synthetic SGD update, and an in-memory state-dict save/load round
+trip that preserves evaluation logits exactly. The gradient check uses training
+mode; output comparisons use evaluation mode to disable dropout.
+
+Inputs are synthetic floating-point embeddings. These checks do not exercise the
+training script's token/position embeddings, real tokenization, optimizer-state
+resume, or a corpus. The single tiny CPU update is a wiring check, not evidence
+of learning quality. Run with `OMP_NUM_THREADS=1` before the discovery command to
+limit CPU thread overhead on small tensors.
