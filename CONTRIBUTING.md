@@ -73,3 +73,24 @@ training script's token/position embeddings, real tokenization, optimizer-state
 resume, or a corpus. The single tiny CPU update is a wiring check, not evidence
 of learning quality. Run with `OMP_NUM_THREADS=1` before the discovery command to
 limit CPU thread overhead on small tensors.
+
+## Automated CPU checks
+
+The `CPU regression tests` GitHub Actions workflow runs the same discovery suite
+on pushes to `main`, pull requests, and manual dispatch. It uses Ubuntu 24.04,
+Python 3.13, CPU-only PyTorch 2.12.1, and tiktoken 0.14.0. Actions are pinned to
+commit revisions, the job has read-only repository permissions, and its timeout
+is ten minutes. No secrets, corpus, model checkpoint, or GPU are required.
+
+To reproduce the direct dependencies in a fresh Python 3.13 virtual environment:
+
+```bash
+python -m pip install torch==2.12.1+cpu --index-url https://download.pytorch.org/whl/cpu
+python -m pip install tiktoken==0.14.0
+OMP_NUM_THREADS=1 python -m unittest discover -s tests -v
+```
+
+Transitive dependencies are resolved by pip rather than locked. The general
+`requirements.txt` remains the dependency list for training and plotting; this
+workflow installs only what the CPU tests need. Passing CI verifies the checks
+described above, not end-to-end training or language-model quality.
